@@ -1,0 +1,51 @@
+From 1b81a51f3eccb395e7702f55140fcda282e4178c Mon Sep 17 00:00:00 2001
+From: GoP <me@grailofpwn.com>
+Date: Fri, 19 Apr 2024 12:33:36 +0100
+Subject: [PATCH] force tiling
+
+---
+ config.def.h | 3 +--
+ dwm.c        | 6 ------
+ 2 files changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index 9efa774..0543d3f 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -27,8 +27,7 @@ static const Rule rules[] = {
+ 	 *	WM_NAME(STRING) = title
+ 	 */
+ 	/* class      instance    title       tags mask     isfloating   monitor */
+-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
++	{ NULL,       NULL,       NULL,       0,            0,           -1 },
+ };
+ 
+ /* layout(s) */
+diff --git a/dwm.c b/dwm.c
+index f1d86b2..9a6cf78 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -1222,7 +1222,6 @@ void
+ propertynotify(XEvent *e)
+ {
+ 	Client *c;
+-	Window trans;
+ 	XPropertyEvent *ev = &e->xproperty;
+ 
+ 	if ((ev->window == root) && (ev->atom == XA_WM_NAME))
+@@ -1232,11 +1231,6 @@ propertynotify(XEvent *e)
+ 	else if ((c = wintoclient(ev->window))) {
+ 		switch(ev->atom) {
+ 		default: break;
+-		case XA_WM_TRANSIENT_FOR:
+-			if (!c->isfloating && (XGetTransientForHint(dpy, c->win, &trans)) &&
+-				(c->isfloating = (wintoclient(trans)) != NULL))
+-				arrange(c->mon);
+-			break;
+ 		case XA_WM_NORMAL_HINTS:
+ 			c->hintsvalid = 0;
+ 			break;
+-- 
+2.43.0
+
